@@ -16,8 +16,6 @@ final class FtpConstants
 
     public const CURRENT_FOLDER = 'ftp_current_folder';
 
-    public const PASSWORD = 'ftp_password';
-
     public const IP = 'ftp_port_ip';
 
     public const PORT = 'ftp_port_port';

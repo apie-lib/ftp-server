@@ -10,8 +10,14 @@ class UserCommand implements CommandInterface
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext
     {
         $conn = $apieContext->getContext(ConnectionInterface::class);
-        $conn->write("331 Username OK, need password\r\n");
-        return $apieContext
-            ->withContext(FtpConstants::USERNAME, $arg);
+        if ($arg) {
+            $conn->write("331 Username OK, need password\r\n");
+            return $apieContext
+                ->withContext(FtpConstants::USERNAME, $arg);
+        } else {
+            // TODO
+        }
+
+        return $apieContext;
     }
 }

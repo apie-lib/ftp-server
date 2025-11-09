@@ -4,7 +4,6 @@ namespace Apie\FtpServer\Commands;
 use Apie\ApieFileSystem\Virtual\VirtualFolderInterface;
 use Apie\Core\Context\ApieContext;
 use Apie\FtpServer\FtpConstants;
-use Apie\Webdav\Dav\ApieDirectory;
 use React\Socket\ConnectionInterface;
 
 class RetrCommand implements CommandInterface

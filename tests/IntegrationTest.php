@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Tests\FtpServer;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpProcess;
 
 class IntegrationTest extends TestCase

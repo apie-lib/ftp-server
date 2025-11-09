@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace Apie\FtpServer;
 
 use Apie\ApieFileSystem\ApieFilesystem;
+use Apie\ApieFileSystem\ApieFilesystemFactory;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
-use Apie\FtpServer\FtpServerRunner;
-use React\EventLoop\Factory;
 use React\EventLoop\Loop;
 use React\Socket\ConnectionInterface;
 use React\Socket\SocketServer;
@@ -23,7 +22,7 @@ class FtpServerCommand extends Command
 
     public function __construct(
         private readonly FtpServerRunner $runner,
-        private readonly ApieFilesystem $filesystem,
+        private readonly ApieFilesystemFactory $filesystemFactory,
         private readonly ContextBuilderFactory $contextBuilder,
     ) {
         parent::__construct();
@@ -44,7 +43,7 @@ class FtpServerCommand extends Command
         $host = (string) $input->getOption('host');
         $port = (int) $input->getOption('port');
 
-        $io->title('FTP Server (skeleton)');
+        $io->title('APIE FTP server');
         $io->listing([
             'Host: ' . $host,
             'Port: ' . $port,
@@ -57,7 +56,6 @@ class FtpServerCommand extends Command
             $this->handleConnection($conn);
         });
 
-        $io->warning('FTP server functionality is not implemented. This command is a skeleton.');
         $loop->run();
         return Command::SUCCESS;
     }
@@ -68,14 +66,16 @@ class FtpServerCommand extends Command
         $context = $this->contextBuilder->createGeneralContext([
             'ftp' => true,
             ConnectionInterface::class => $conn,
-            ApieFilesystem::class => $this->filesystem,
-            'ftp_current_folder' => $this->filesystem->rootFolder,
-            'ftp_cwd' => '/',
+            ApieFilesystemFactory::class => $this->filesystemFactory,
+            FtpConstants::CURRENT_PWD => '/',
         ]);
+        $filesystem = $this->filesystemFactory->create($context);
+        $context = $context
+            ->withContext(ApieFilesystem::class, $filesystem)
+            ->withContext(FtpConstants::CURRENT_FOLDER, $filesystem->rootFolder);
 
         $conn->on('data', function ($data) use ($conn, &$context) {
             $command = trim($data);
-            //echo "⇢ $command\n";
 
             [$cmd, $arg] = array_pad(explode(' ', $command, 2), 2, null);
             $cmd = strtoupper($cmd);

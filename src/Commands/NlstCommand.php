@@ -26,7 +26,7 @@ class NlstCommand implements CommandInterface
             $conn->write(implode("\r\n", $files) . "\r\n");
             $conn->write("226 NLST command successful.\r\n");
         } else {
-            $conn->write("450 Path is not a folder.\r\n");
+            $conn->write("550 Path is not a folder.\r\n");
         }
         return $apieContext;
     }
