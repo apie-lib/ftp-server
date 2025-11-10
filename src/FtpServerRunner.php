@@ -2,6 +2,7 @@
 namespace Apie\FtpServer;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\Commands\CwdCommand;
 use Apie\FtpServer\Commands\ListCommand;
 use Apie\FtpServer\Commands\NlstCommand;
 use Apie\FtpServer\Commands\PassCommand;
@@ -9,6 +10,7 @@ use Apie\FtpServer\Commands\PortCommand;
 use Apie\FtpServer\Commands\PwdCommand;
 use Apie\FtpServer\Commands\QuitCommand;
 use Apie\FtpServer\Commands\RetrCommand;
+use Apie\FtpServer\Commands\SystCommand;
 use Apie\FtpServer\Commands\TypeCommand;
 use Apie\FtpServer\Commands\UserCommand;
 use Apie\FtpServer\Lists\CommandHashmap;
@@ -25,15 +27,17 @@ class FtpServerRunner
     {
         return new self(
             new CommandHashmap([
-                'USER' => new UserCommand(),
-                'PASS' => new PassCommand(),
-                'PWD' => new PwdCommand(),
+                'CWD' => new CwdCommand(),
                 'LIST' => new ListCommand(),
-                'RETR' => new RetrCommand(),
-                'QUIT' => new QuitCommand(),
-                'TYPE' => new TypeCommand(),
-                'PORT' => new PortCommand(),
                 'NLST' => new NlstCommand(),
+                'PASS' => new PassCommand(),
+                'PORT' => new PortCommand(),
+                'PWD'  => new PwdCommand(),
+                'QUIT' => new QuitCommand(),
+                'RETR' => new RetrCommand(),
+                'SYST' => new SystCommand(),
+                'TYPE' => new TypeCommand(),
+                'USER' => new UserCommand(),
             ])
         );
     }

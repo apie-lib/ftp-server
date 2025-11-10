@@ -6,6 +6,8 @@ namespace Apie\FtpServer;
 use Apie\ApieFileSystem\ApieFilesystem;
 use Apie\ApieFileSystem\ApieFilesystemFactory;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
+use Apie\FtpServer\Transfers\NoTransferSet;
+use Apie\FtpServer\Transfers\TransferInterface;
 use React\EventLoop\Loop;
 use React\Socket\ConnectionInterface;
 use React\Socket\SocketServer;
@@ -52,33 +54,35 @@ class FtpServerCommand extends Command
         $loop = Loop::get();
 
         $server = new SocketServer("0.0.0.0:$port", [], $loop);
-        $server->on('connection', function (ConnectionInterface $conn) {
-            $this->handleConnection($conn);
+        $server->on('connection', function (ConnectionInterface $conn) use ($output) {
+            $this->handleConnection($conn, $output);
         });
 
         $loop->run();
         return Command::SUCCESS;
     }
 
-    private function handleConnection(ConnectionInterface $conn)
+    private function handleConnection(ConnectionInterface $conn, OutputInterface $output)
     {
-        $conn->write("220 PHP Virtual FTP Server Ready\r\n");
+        $conn->write("220 Apie FTP Server Ready\r\n");
         $context = $this->contextBuilder->createGeneralContext([
             'ftp' => true,
             ConnectionInterface::class => $conn,
             ApieFilesystemFactory::class => $this->filesystemFactory,
             FtpConstants::CURRENT_PWD => '/',
+            TransferInterface::class => new NoTransferSet(),
         ]);
         $filesystem = $this->filesystemFactory->create($context);
         $context = $context
             ->withContext(ApieFilesystem::class, $filesystem)
             ->withContext(FtpConstants::CURRENT_FOLDER, $filesystem->rootFolder);
 
-        $conn->on('data', function ($data) use ($conn, &$context) {
+        $conn->on('data', function ($data) use ($conn, $output, &$context) {
             $command = trim($data);
 
             [$cmd, $arg] = array_pad(explode(' ', $command, 2), 2, null);
             $cmd = strtoupper($cmd);
+            $output->writeln("Command $cmd");
 
             $context = $this->runner->run($context, $cmd, $arg ?? '');
         });

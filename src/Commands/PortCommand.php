@@ -3,6 +3,8 @@ namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
 use Apie\FtpServer\FtpConstants;
+use Apie\FtpServer\Transfers\PortTransfer;
+use Apie\FtpServer\Transfers\TransferInterface;
 use React\Socket\ConnectionInterface;
 
 class PortCommand implements CommandInterface
@@ -20,7 +22,8 @@ class PortCommand implements CommandInterface
         $port = ((int)$parts[4] << 8) + (int)$parts[5];
         // Store IP and port in context for later use
         $apieContext = $apieContext->withContext(FtpConstants::IP, $ip)
-                                 ->withContext(FtpConstants::PORT, $port);
+            ->withContext(FtpConstants::PORT, $port)
+            ->withContext(TransferInterface::class, new PortTransfer($ip, $port));
         $conn->write("200 PORT command successful.\r\n");
         return $apieContext;
     }
