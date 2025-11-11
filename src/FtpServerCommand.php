@@ -82,7 +82,7 @@ class FtpServerCommand extends Command
 
             [$cmd, $arg] = array_pad(explode(' ', $command, 2), 2, null);
             $cmd = strtoupper($cmd);
-            $output->writeln("Command $cmd");
+            $output->writeln("Command $cmd $arg");
 
             $context = $this->runner->run($context, $cmd, $arg ?? '');
         });

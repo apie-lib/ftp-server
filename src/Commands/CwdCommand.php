@@ -14,9 +14,13 @@ class CwdCommand implements CommandInterface
         $currentFolder = $apieContext->getContext(FtpConstants::CURRENT_FOLDER);
         assert($currentFolder instanceof VirtualFolderInterface);
         $pwd = trim($apieContext->getContext(FtpConstants::CURRENT_PWD), '/');
+        $arg = trim($arg, '/');
         if (!$arg || preg_match('#/#', $arg)) {
             $conn->write("550 Name invalid\r\n");
             return $apieContext;
+        }
+        if ($arg === '..') {
+            return (new CdupCommand())->run($apieContext, $arg);
         }
         $child = $currentFolder->getChild($arg);
         if (!$child) {
