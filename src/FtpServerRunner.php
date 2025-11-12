@@ -12,6 +12,7 @@ use Apie\FtpServer\Commands\PortCommand;
 use Apie\FtpServer\Commands\PwdCommand;
 use Apie\FtpServer\Commands\QuitCommand;
 use Apie\FtpServer\Commands\RetrCommand;
+use Apie\FtpServer\Commands\SiteCommand;
 use Apie\FtpServer\Commands\SystCommand;
 use Apie\FtpServer\Commands\TypeCommand;
 use Apie\FtpServer\Commands\UserCommand;
@@ -39,6 +40,7 @@ class FtpServerRunner
                 'PWD'  => new PwdCommand(),
                 'QUIT' => new QuitCommand(),
                 'RETR' => new RetrCommand(),
+                'SITE' => new SiteCommand(),
                 'SYST' => new SystCommand(),
                 'TYPE' => new TypeCommand(),
                 'USER' => new UserCommand(),
