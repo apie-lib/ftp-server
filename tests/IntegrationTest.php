@@ -51,6 +51,6 @@ class IntegrationTest extends TestCase
     public static function listFoldersProvider(): \Generator
     {
         yield 'passive' => [true];
-        yield 'port' => [true];
+        yield 'port' => [false];
     }
 }
