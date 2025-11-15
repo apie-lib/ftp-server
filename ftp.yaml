@@ -1,4 +1,11 @@
 services:
   Apie\FtpServer\FtpServerCommand:
     arguments:
-      - 
+      - '@Apie\FtpServer\FtpServerRunner'
+      - '@Apie\ApieFileSystem\ApieFilesystemFactory'
+      - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
+
+  Apie\FtpServer\FtpServerRunner:
+    factory:
+      -  Apie\FtpServer\FtpServerRunner
+      - 'create'
