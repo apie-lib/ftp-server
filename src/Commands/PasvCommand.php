@@ -2,6 +2,7 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\Transfers\PasvTransfer;
 use Apie\FtpServer\Transfers\TransferInterface;
 use React\Socket\ConnectionInterface;
@@ -18,7 +19,11 @@ class PasvCommand implements CommandInterface
         $transfer = new PasvTransfer();
         $address = $transfer->getAddress();
         $port = parse_url($address, PHP_URL_PORT);
-        $ip = '127,0,0,1'; // adjust if needed
+        $ip = str_replace(
+            '.',
+            ',',
+            $apieContext->getContext(FtpConstants::PUBLIC_IP, false) ?? '127.0.0.1'
+        );
         $p1 = intdiv($port, 256);
         $p2 = $port % 256;
 

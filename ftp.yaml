@@ -4,6 +4,7 @@ services:
       - '@Apie\FtpServer\FtpServerRunner'
       - '@Apie\ApieFileSystem\ApieFilesystemFactory'
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
+      - '%apie.ftp_server.public_ip%'
 
   Apie\FtpServer\FtpServerRunner:
     factory:

@@ -26,6 +26,7 @@ class FtpServerCommand extends Command
         private readonly FtpServerRunner $runner,
         private readonly ApieFilesystemFactory $filesystemFactory,
         private readonly ContextBuilderFactory $contextBuilder,
+        private readonly string $defaultIpAddress = '127.0.0.1',
     ) {
         parent::__construct();
     }
@@ -33,7 +34,7 @@ class FtpServerCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('host', null, InputOption::VALUE_REQUIRED, 'Host to bind to', '127.0.0.1')
+            ->addOption('host', null, InputOption::VALUE_REQUIRED, 'Host to bind to', $this->defaultIpAddress)
             ->addOption('port', null, InputOption::VALUE_REQUIRED, 'Port to listen on', '2121')
             ->setHelp('Start an APIE FTP server.');
     }
@@ -54,15 +55,15 @@ class FtpServerCommand extends Command
         $loop = Loop::get();
 
         $server = new SocketServer("0.0.0.0:$port", [], $loop);
-        $server->on('connection', function (ConnectionInterface $conn) use ($output) {
-            $this->handleConnection($conn, $output);
+        $server->on('connection', function (ConnectionInterface $conn) use ($input, $output) {
+            $this->handleConnection($conn, $input, $output);
         });
 
         $loop->run();
         return Command::SUCCESS;
     }
 
-    private function handleConnection(ConnectionInterface $conn, OutputInterface $output)
+    private function handleConnection(ConnectionInterface $conn, InputInterface $input, OutputInterface $output)
     {
         $conn->write("220 Apie FTP Server Ready\r\n");
         $context = $this->contextBuilder->createGeneralContext([
@@ -71,6 +72,7 @@ class FtpServerCommand extends Command
             ApieFilesystemFactory::class => $this->filesystemFactory,
             FtpConstants::CURRENT_PWD => '/',
             TransferInterface::class => new NoTransferSet(),
+            FtpConstants::PUBLIC_IP => $input->getOption('host'),
         ]);
         $filesystem = $this->filesystemFactory->create($context);
         $context = $context
