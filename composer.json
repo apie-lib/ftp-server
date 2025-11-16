@@ -23,6 +23,7 @@
     "php": ">=8.3",
     "apie/core": "self.version",
     "apie/apie-file-system": "self.version",
+    "phpunit/php-code-coverage": "^11.0.8",
     "react/socket": "^1.16"
   },
   "require-dev": {

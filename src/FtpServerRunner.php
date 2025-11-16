@@ -17,6 +17,7 @@ use Apie\FtpServer\Commands\SystCommand;
 use Apie\FtpServer\Commands\TypeCommand;
 use Apie\FtpServer\Commands\UserCommand;
 use Apie\FtpServer\Lists\CommandHashmap;
+use Apie\FtpServer\SiteCommands\SiteCommandInterface;
 use React\Socket\ConnectionInterface;
 
 class FtpServerRunner
@@ -26,7 +27,7 @@ class FtpServerRunner
     ) {
     }
 
-    public static function create(): self
+    public static function create(SiteCommandInterface... $siteCommands): self
     {
         return new self(
             new CommandHashmap([
@@ -40,7 +41,7 @@ class FtpServerRunner
                 'PWD'  => new PwdCommand(),
                 'QUIT' => new QuitCommand(),
                 'RETR' => new RetrCommand(),
-                'SITE' => new SiteCommand(),
+                'SITE' => SiteCommand::create(...$siteCommands),
                 'SYST' => new SystCommand(),
                 'TYPE' => new TypeCommand(),
                 'USER' => new UserCommand(),

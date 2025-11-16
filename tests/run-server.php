@@ -10,7 +10,12 @@ use Apie\Core\ContextBuilders\ContextBuilderInterface;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\FtpServer\FtpServerCommand;
 use Apie\FtpServer\FtpServerRunner;
+use Apie\FtpServer\SiteCommands\StoreTestCoverageCommand;
 use Apie\Serializer\Serializer;
+use SebastianBergmann\CodeCoverage\Filter;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\NoCodeCoverageDriverAvailableException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -31,7 +36,7 @@ class AddLoginService implements ContextBuilderInterface
 
     public function process(ApieContext $context): ApieContext
     {
-        return $context->withContext(
+        $context = $context->withContext(
             LoginService::class,
             new LoginService(
                 $this->boundedContextHashmap,
@@ -39,6 +44,19 @@ class AddLoginService implements ContextBuilderInterface
                 $this->serializer
             )
         );
+        try {
+            $filter = new Filter();
+            $filter->includeFile(__DIR__ . '/../src');
+            $coverage = new CodeCoverage(
+                (new Selector)->forLineCoverage($filter),
+                $filter
+            );
+
+            $coverage->start('FTP integration test');
+            return $context->registerInstance($coverage);
+        } catch (NoCodeCoverageDriverAvailableException) {
+            return $context;
+        }
     }
 }
 
@@ -57,7 +75,7 @@ $factory = new ApieFilesystemFactory(
 );
 
 $command = new FtpServerCommand(
-    FtpServerRunner::create(),
+    FtpServerRunner::create(new StoreTestCoverageCommand()),
     $factory,
     $contextBuilderFactory
 );
