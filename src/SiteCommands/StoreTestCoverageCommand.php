@@ -31,7 +31,8 @@ class StoreTestCoverageCommand implements SiteCommandInterface
             (new PhpReport)->process($coverage, $arg);
             $conn->write("200 Test coverage data stored successfully\r\n");
         } else {
-            $conn->write("550 No code coverage context available\r\n");
+            $conn->write("200 No test coverage data to store\r\n");
+            //$conn->write("550 No code coverage context available\r\n");
         }
         return $apieContext;
     }

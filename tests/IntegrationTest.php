@@ -49,8 +49,10 @@ class IntegrationTest extends TestCase
                 $this->assertEquals(['default', 'other'], $files, '2 files found in root directory');
             }
         } finally {
-            ftp_site($ftp, 'TEST ' . $coverageFile);
+            $result = ftp_site($ftp, 'TEST ' . $coverageFile);
             ftp_close($ftp);
+            $this->assertTrue($result, 'Call test coverage SITE command failed: ' . $this->process->getErrorOutput() . $this->process->getOutput());
+            
         }
         
     }
@@ -76,8 +78,9 @@ class IntegrationTest extends TestCase
             ];
             $this->assertEquals($expected, $result, 'SITE HELP did not return expected output: ' . implode("\n", $result));
         } finally {
-            ftp_site($ftp, 'TEST ' . $coverageFile);
+            $result = ftp_site($ftp, 'TEST ' . $coverageFile);
             ftp_close($ftp);
+            $this->assertTrue($result, 'Call test coverage SITE command failed: ' . $this->process->getErrorOutput() . $this->process->getOutput());
         }
         
     }
