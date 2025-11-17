@@ -18,6 +18,7 @@ use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\NoCodeCoverageDriverAvailableException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Finder\Finder;
 
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require('../vendor/autoload.php');
@@ -46,7 +47,12 @@ class AddLoginService implements ContextBuilderInterface
         );
         try {
             $filter = new Filter();
-            $filter->includeFile(__DIR__ . '/../src');
+            foreach (Finder::create()->in(__DIR__ . '/../src')->files() as $file) {
+                $path = $file->getRealPath();
+                if ($path) {
+                    $filter->includeFile($path);
+                }
+            }   
             $coverage = new CodeCoverage(
                 (new Selector)->forLineCoverage($filter),
                 $filter

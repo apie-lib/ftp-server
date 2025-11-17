@@ -5,6 +5,8 @@ services:
       - '@Apie\ApieFileSystem\ApieFilesystemFactory'
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
       - '%apie.ftp_server.public_ip%'
+    tags:
+      - { name: 'console.command' }
 
   Apie\FtpServer\FtpServerRunner:
     factory:

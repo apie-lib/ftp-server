@@ -20,10 +20,22 @@ class FtpServerServiceProvider extends ServiceProvider
                 return new \Apie\FtpServer\FtpServerCommand(
                     $app->make(\Apie\FtpServer\FtpServerRunner::class),
                     $app->make(\Apie\ApieFileSystem\ApieFilesystemFactory::class),
-                    $app->make(\Apie\Core\ContextBuilders\ContextBuilderFactory::class)
+                    $app->make(\Apie\Core\ContextBuilders\ContextBuilderFactory::class),
+                    $this->parseArgument('%apie.ftp_server.public_ip%', \Apie\FtpServer\FtpServerCommand::class, 3)
                 );
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\FtpServer\FtpServerCommand::class,
+            array(
+              0 =>
+              array(
+                'name' => 'console.command',
+              ),
+            )
+        );
+        $this->app->tag([\Apie\FtpServer\FtpServerCommand::class], 'console.command');
         $this->app->singleton(
             \Apie\FtpServer\FtpServerRunner::class,
             function ($app) {

@@ -19,16 +19,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class FtpServerCommand extends Command
 {
-    protected static $defaultName = 'apie:ftp:serve';
-    protected static $defaultDescription = 'Run a lightweight FTP server';
-
     public function __construct(
         private readonly FtpServerRunner $runner,
         private readonly ApieFilesystemFactory $filesystemFactory,
         private readonly ContextBuilderFactory $contextBuilder,
         private readonly string $defaultIpAddress = '127.0.0.1',
     ) {
-        parent::__construct();
+        parent::__construct('apie:ftp-server');
     }
 
     protected function configure(): void
@@ -36,6 +33,7 @@ class FtpServerCommand extends Command
         $this
             ->addOption('host', null, InputOption::VALUE_REQUIRED, 'Host to bind to', $this->defaultIpAddress)
             ->addOption('port', null, InputOption::VALUE_REQUIRED, 'Port to listen on', '2121')
+            ->setDescription('Runs a virtual FTP server to link with Apie')
             ->setHelp('Start an APIE FTP server.');
     }
 
