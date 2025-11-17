@@ -4,14 +4,14 @@ namespace Apie\FtpServer\Commands;
 use Apie\Core\Context\ApieContext;
 use Apie\FtpServer\SiteCommands\IdleCommand;
 use Apie\FtpServer\SiteCommands\SiteCommandInterface;
-use Doctrine\ORM\Mapping\Id;
 use React\Socket\ConnectionInterface;
 
 class SiteCommand implements CommandInterface
 {
     private array $siteCommands;
 
-    public function __construct(SiteCommandInterface... $siteCommands) {
+    public function __construct(SiteCommandInterface... $siteCommands)
+    {
         $this->siteCommands = [];
         foreach ($siteCommands as $siteCommand) {
             $this->siteCommands[strtoupper($siteCommand->getName())] = $siteCommand;

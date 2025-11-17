@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Apie\FtpServer\SiteCommands;
 
 use Apie\Core\Context\ApieContext;

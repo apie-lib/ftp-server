@@ -27,8 +27,10 @@
     "react/socket": "^1.16"
   },
   "require-dev": {
+    "apie/fixtures":"self.version",
     "phpunit/phpunit": "^11.5.2",
     "phpspec/prophecy-phpunit": "^2.2",
+    "symfony/console": "^7.2",
     "symfony/process": "^7.2"
   },
   "minimum-stability": "dev",

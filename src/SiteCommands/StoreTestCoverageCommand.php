@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Apie\FtpServer\SiteCommands;
 
 use Apie\Core\Context\ApieContext;
@@ -26,7 +26,7 @@ class StoreTestCoverageCommand implements SiteCommandInterface
             return $apieContext;
         }
         $coverage = $apieContext->getContext(CodeCoverage::class, false);
-        if($coverage instanceof CodeCoverage) {
+        if ($coverage instanceof CodeCoverage) {
             $coverage->stop();
             (new PhpReport)->process($coverage, $arg);
             $conn->write("200 Test coverage data stored successfully\r\n");
