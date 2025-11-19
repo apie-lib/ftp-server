@@ -4,6 +4,8 @@ namespace Apie\FtpServer;
 use Apie\Core\Context\ApieContext;
 use Apie\FtpServer\Commands\CdupCommand;
 use Apie\FtpServer\Commands\CwdCommand;
+use Apie\FtpServer\Commands\EprtCommand;
+use Apie\FtpServer\Commands\EpsvCommand;
 use Apie\FtpServer\Commands\ListCommand;
 use Apie\FtpServer\Commands\NlstCommand;
 use Apie\FtpServer\Commands\PassCommand;
@@ -32,7 +34,9 @@ class FtpServerRunner
         return new self(
             new CommandHashmap([
                 'CDUP' => new CdupCommand(),
-                'CWD' => new CwdCommand(),
+                'CWD'  => new CwdCommand(),
+                'EPRT' => new EprtCommand(),
+                'EPSV' => new EpsvCommand(),
                 'LIST' => new ListCommand(),
                 'NLST' => new NlstCommand(),
                 'PASS' => new PassCommand(),

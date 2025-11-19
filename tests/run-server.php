@@ -47,18 +47,18 @@ class AddLoginService implements ContextBuilderInterface
         );
         try {
             $filter = new Filter();
-            /*foreach (Finder::create()->in(__DIR__ . '/../src')->files() as $file) {
+            foreach (Finder::create()->in(__DIR__ . '/../src')->files() as $file) {
                 $path = $file->getRealPath();
                 if ($path) {
                     $filter->includeFile($path);
                 }
-            }  */
+            }
             $coverage = new CodeCoverage(
                 (new Selector)->forLineCoverage($filter),
                 $filter
             );
 
-            $coverage->start('FTP integration test');
+            $coverage->start('FTP');
             return $context->registerInstance($coverage);
         } catch (NoCodeCoverageDriverAvailableException) {
             return $context;
