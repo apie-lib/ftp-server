@@ -12,9 +12,28 @@ class PasvTransfer implements TransferInterface
     private SocketServer $dataServer;
     private ?PromiseInterface $lastAction = null;
 
-    public function __construct(private readonly string $ipAddress = '127.0.0.1')
-    {
-        $this->dataServer = new SocketServer('0.0.0.0:0');
+    public function __construct(
+        private readonly string $passiveMinPort = '49152',
+        private readonly string $passiveMaxPort = '65534',
+    ) {
+        $port = null;
+
+        // Try ports until we succeed
+        foreach (range($passiveMinPort, $passiveMaxPort) as $candidate) {
+            try {
+                $this->dataServer = new SocketServer("0.0.0.0:$candidate");
+                $port = $candidate;
+                break;
+            } catch (\Throwable $e) {
+                // Port in use — try next
+            }
+        }
+
+        if ($port === null) {
+            throw new \RuntimeException(
+                "No available passive ports in range $passiveMinPort-$passiveMaxPort"
+            );
+        }
     }
 
     public function __destruct()

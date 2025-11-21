@@ -5,6 +5,8 @@ services:
       - '@Apie\ApieFileSystem\ApieFilesystemFactory'
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
       - '%apie.ftp_server.public_ip%'
+      - '%apie.ftp_server.passive_min_port%'
+      - '%apie.ftp_server.passive_max_port%'
     tags:
       - { name: 'console.command' }
 

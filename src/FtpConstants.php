@@ -22,6 +22,16 @@ final class FtpConstants
     public const PUBLIC_IP = 'ftp_public_ip';
 
     /**
+     * PASV command minimum port number to use
+     */
+    public const PASV_MIN_PORT = 'ftp_passive_min_port';
+
+    /**
+     * PASV command maximum port number to use (inclusive)
+     */
+    public const PASV_MAX_PORT = 'ftp_passive_max_port';
+
+    /**
      * PORT command ip address to connect to
      */
     public const IP = 'ftp_port_ip';

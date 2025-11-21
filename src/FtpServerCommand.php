@@ -24,6 +24,8 @@ class FtpServerCommand extends Command
         private readonly ApieFilesystemFactory $filesystemFactory,
         private readonly ContextBuilderFactory $contextBuilder,
         private readonly string $defaultIpAddress = '127.0.0.1',
+        private readonly string $passiveMinPort = '49152',
+        private readonly string $passiveMaxPort = '65534',
     ) {
         parent::__construct('apie:ftp-server');
     }
@@ -71,6 +73,8 @@ class FtpServerCommand extends Command
             FtpConstants::CURRENT_PWD => '/',
             TransferInterface::class => new NoTransferSet(),
             FtpConstants::PUBLIC_IP => $input->getOption('host'),
+            FtpConstants::PASV_MIN_PORT => $this->passiveMinPort,
+            FtpConstants::PASV_MAX_PORT => $this->passiveMaxPort,
         ]);
         $filesystem = $this->filesystemFactory->create($context);
         $context = $context

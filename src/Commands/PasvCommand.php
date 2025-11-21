@@ -16,7 +16,10 @@ class PasvCommand implements CommandInterface
         if ($transfer instanceof PasvTransfer) {
             $transfer->end();
         }
-        $transfer = new PasvTransfer();
+        $transfer = new PasvTransfer(
+            $apieContext->getContext(FtpConstants::PASV_MIN_PORT, false) ?? '49152',
+            $apieContext->getContext(FtpConstants::PASV_MAX_PORT, false) ?? '65534',
+        );
         $address = $transfer->getAddress();
         $port = parse_url($address, PHP_URL_PORT);
         $ip = str_replace(
