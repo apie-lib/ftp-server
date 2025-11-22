@@ -19,6 +19,10 @@ class CwdCommand implements CommandInterface
             $conn->write("550 Name invalid\r\n");
             return $apieContext;
         }
+        if ($arg === '.') {
+            $conn->write("250 Directory successfully changed.\r\n");
+            return $apieContext;
+        }
         if ($arg === '..') {
             return (new CdupCommand())->run($apieContext, $arg);
         }

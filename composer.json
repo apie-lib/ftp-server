@@ -27,7 +27,9 @@
     "react/socket": "^1.16"
   },
   "require-dev": {
+    "apie/export": "self.version",
     "apie/fixtures":"self.version",
+    "evenement/evenement": "^3.0 || ^2.0 || ^1.0",
     "phpunit/phpunit": "^11.5.2",
     "phpspec/prophecy-phpunit": "^2.2",
     "symfony/console": "^7.2",
