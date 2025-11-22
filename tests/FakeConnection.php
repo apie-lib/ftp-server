@@ -11,6 +11,8 @@ class FakeConnection extends EventEmitter implements ConnectionInterface
 {
     private $data = '';
 
+    public bool $ended = false;
+
     public function isReadable()
     {
         return true;
@@ -45,6 +47,7 @@ class FakeConnection extends EventEmitter implements ConnectionInterface
 
     public function end($data = null)
     {
+        $this->ended = true;
     }
 
     public function close()

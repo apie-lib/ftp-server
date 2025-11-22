@@ -23,10 +23,14 @@ trait CreateFtpContext
     {
         $hashmap = BoundedContextFactory::createHashmapWithMultipleContexts();
         
+        $serializer = Serializer::create();
+
+        $actionDefinitionProvider = new ActionDefinitionProvider();
+
         $entityExport = new EntityExport(
             new ColumnSelector(),
             new CsvExport(),
-            Serializer::create(),
+            $serializer,
         );
 
         $context = new ApieContext(
@@ -36,12 +40,14 @@ trait CreateFtpContext
                 EntityExport::class => $entityExport,
                 FtpConstants::CURRENT_PWD => trim($currentPath, '/'),
                 TransferInterface::class => new FakeTransfer(),
+                Serializer::class => $serializer,
+                ActionDefinitionProvider::class => $actionDefinitionProvider,
                 'ftp' => true,
             ]
         );
 
         $filesystem = new ApieFilesystem(
-            new RootFolder($hashmap, new ActionDefinitionProvider(), $context),
+            new RootFolder($hashmap, $actionDefinitionProvider, $context),
         );
 
         return $context

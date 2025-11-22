@@ -17,13 +17,13 @@ class ListCommandTest extends TestCase
     
     #[Test]
     #[DataProvider('provideCases')]
-    public function it_changes_directory_upwards(string $expectedDataOutput, string $expectedOutput, string $path): void
+    public function it_lists_directory_contents(string $expectedDataOutput, string $expectedOutput, string $path): void
     {
         $testItem = new ListCommand();
         $context = $this->createContext($path);
         $connection = $context->getContext(ConnectionInterface::class);
         assert($connection instanceof FakeConnection);
-        $result = $testItem->run($context);
+        $testItem->run($context);
         $this->assertEquals($expectedOutput, $connection->getData());
         $transfer = $context->getContext(TransferInterface::class);
         assert($transfer instanceof FakeTransfer);
