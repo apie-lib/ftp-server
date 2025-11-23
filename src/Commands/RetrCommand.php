@@ -13,7 +13,7 @@ class RetrCommand implements CommandInterface
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext
     {
         $conn = $apieContext->getContext(ConnectionInterface::class);
-        if ($arg) {
+        if (!$arg) {
             $conn->write("501 Missing filename\r\n");
         } else {
             $folder = $apieContext->getContext(FtpConstants::CURRENT_FOLDER);
@@ -26,7 +26,6 @@ class RetrCommand implements CommandInterface
             } else {
                 $conn->write("150 Opening data connection\r\n");
                 $transfer->send(Utils::toString($file->getContents()));
-                $conn->write("\r\n");
                 $conn->write("226 Transfer complete\r\n");
             }
         }

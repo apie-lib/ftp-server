@@ -5,7 +5,12 @@ use Apie\ApieFileSystem\ApieFilesystem;
 use Apie\ApieFileSystem\Virtual\RootFolder;
 use Apie\Common\ActionDefinitionProvider;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
+use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
+use Apie\Core\Indexing\Indexer;
 use Apie\Export\CsvExport;
 use Apie\Export\EntityExport;
 use Apie\Fixtures\BoundedContextFactory;
@@ -42,6 +47,10 @@ trait CreateFtpContext
                 TransferInterface::class => new FakeTransfer(),
                 Serializer::class => $serializer,
                 ActionDefinitionProvider::class => $actionDefinitionProvider,
+                ApieDatalayer::class => new InMemoryDatalayer(
+                    new BoundedContextId('default'),
+                    new LazyLoadedListFilterer(Indexer::create())
+                ),
                 'ftp' => true,
             ]
         );

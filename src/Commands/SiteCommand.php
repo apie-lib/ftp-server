@@ -21,7 +21,7 @@ class SiteCommand implements CommandInterface
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext
     {
         $conn = $apieContext->getContext(ConnectionInterface::class);
-        list($command, $args) = explode(' ', $arg, 2);
+        list($command, $args) = array_pad(explode(' ', $arg, 2), 2, null);
         $command = strtoupper($command);
         if ($command === 'HELP') {
             // Iterate all registered SITE commands and print their help text.

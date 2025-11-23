@@ -44,6 +44,18 @@ class PassCommandTest extends TestCase
         $this->assertEquals($expectAuthenticated, $user);
     }
 
+    public function it_gives_a_positive_response_without_login_service(): void
+    {
+        $testItem = new PassCommand();
+        $context = $this->createContext('/');
+
+        $connection = $context->getContext(ConnectionInterface::class);
+        assert($connection instanceof FakeConnection);
+        $result = $testItem->run($context, 'any_password');
+        $this->assertEquals("230 User logged in\r\n", $connection->getData());
+        $this->assertFalse($result->getContext(ContextConstants::AUTHENTICATED_USER, false));
+    }
+
     public static function provideCases(): array
     {
         return [
