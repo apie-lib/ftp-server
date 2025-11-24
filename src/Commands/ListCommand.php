@@ -28,7 +28,7 @@ class ListCommand implements CommandInterface
                 ($child instanceof VirtualFolderInterface ? 'd' : '-')
                 . "rw-r--r-- 1 user group "
                 . $size
-                . " Jan 1 " . $child->getName() . "\r\n"
+                . ($child instanceof VirtualFolderInterface ? " Jan 1 " : ' ') . $child->getName() . "\r\n"
             );
         }
         $transfer->end();

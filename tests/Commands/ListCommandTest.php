@@ -39,9 +39,9 @@ class ListCommandTest extends TestCase
                     "\n",
                     [
                         "drw-r--r-- 1 user group  Jan 1 UserWithAddress\r",
-                        "-rw-r--r-- 1 user group 0 Jan 1 UserWithAddress.csv\r",
+                        "-rw-r--r-- 1 user group 0 UserWithAddress.csv\r",
                         "drw-r--r-- 1 user group  Jan 1 Order\r",
-                        "-rw-r--r-- 1 user group 0 Jan 1 Order.csv\r",
+                        "-rw-r--r-- 1 user group 0 Order.csv\r",
                         ""
                     ]
                 ),
