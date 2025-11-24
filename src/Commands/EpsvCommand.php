@@ -2,6 +2,7 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\Transfers\PasvTransfer;
 use Apie\FtpServer\Transfers\TransferInterface;
 use React\Socket\ConnectionInterface;

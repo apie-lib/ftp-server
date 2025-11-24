@@ -38,10 +38,10 @@ class ListCommandTest extends TestCase
                 implode(
                     "\n",
                     [
-                        "drw-r--r-- 1 user group  Jan 1 00:00 UserWithAddress\r",
-                        "drw-r--r-- 1 user group 0 Jan 1 00:00 UserWithAddress.csv\r",
-                        "drw-r--r-- 1 user group  Jan 1 00:00 Order\r",
-                        "drw-r--r-- 1 user group 0 Jan 1 00:00 Order.csv\r",
+                        "drw-r--r-- 1 user group  Jan 1 UserWithAddress\r",
+                        "-rw-r--r-- 1 user group 0 Jan 1 UserWithAddress.csv\r",
+                        "drw-r--r-- 1 user group  Jan 1 Order\r",
+                        "-rw-r--r-- 1 user group 0 Jan 1 Order.csv\r",
                         ""
                     ]
                 ),
@@ -52,8 +52,8 @@ class ListCommandTest extends TestCase
                 implode(
                     "\n",
                     [
-                        "drw-r--r-- 1 user group  Jan 1 00:00 default\r",
-                        "drw-r--r-- 1 user group  Jan 1 00:00 other\r",
+                        "drw-r--r-- 1 user group  Jan 1 default\r",
+                        "drw-r--r-- 1 user group  Jan 1 other\r",
                         ""
                     ]
                 ),

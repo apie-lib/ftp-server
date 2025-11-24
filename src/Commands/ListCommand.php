@@ -25,10 +25,10 @@ class ListCommand implements CommandInterface
                 $size = $child->getSize() ?? '0';
             }
             $transfer->send(
-                ($currentFolder instanceof VirtualFolderInterface ? 'd' : '-')
+                ($child instanceof VirtualFolderInterface ? 'd' : '-')
                 . "rw-r--r-- 1 user group "
                 . $size
-                . " Jan 1 00:00 " . $child->getName() . "\r\n"
+                . " Jan 1 " . $child->getName() . "\r\n"
             );
         }
         $transfer->end();
