@@ -1,6 +1,7 @@
 <?php
 namespace Apie\FtpServer\Transfers;
 
+use Apie\FtpServer\PassivePortManager;
 use React\EventLoop\Loop;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
@@ -18,22 +19,10 @@ class PasvTransfer implements TransferInterface
     ) {
         $port = null;
 
-        // Try ports until we succeed
-        foreach (range($passiveMinPort, $passiveMaxPort) as $candidate) {
-            try {
-                $this->dataServer = new SocketServer("0.0.0.0:$candidate");
-                $port = $candidate;
-                break;
-            } catch (\Throwable $e) {
-                // Port in use — try next
-            }
-        }
-
-        if ($port === null) {
-            throw new \RuntimeException(
-                "No available passive ports in range $passiveMinPort-$passiveMaxPort"
-            );
-        }
+        $this->dataServer = PassivePortManager::getAvailablePort(
+            (int) $passiveMinPort,
+            (int) $passiveMaxPort
+        );
     }
 
     public function __destruct()
@@ -92,7 +81,7 @@ class PasvTransfer implements TransferInterface
                 $conn->end();
             }
         )->finally(function () {
-            $this->dataServer->close();
+            PassivePortManager::release($this->dataServer);
             $this->lastAction = null;
         });
     }
