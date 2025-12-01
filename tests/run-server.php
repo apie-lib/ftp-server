@@ -4,13 +4,21 @@ use Apie\ApieFileSystem\ApieFilesystemFactory;
 use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\LoginService;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\ContextBuilders\ContextBuilderInterface;
+use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
+use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
+use Apie\Core\Indexing\Indexer;
+use Apie\Export\ChainedExport;
+use Apie\Export\CsvExport;
+use Apie\Export\EntityExport;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\FtpServer\FtpServerCommand;
 use Apie\FtpServer\FtpServerRunner;
 use Apie\FtpServer\SiteCommands\StoreTestCoverageCommand;
+use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\Serializer\Serializer;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
@@ -37,14 +45,29 @@ class AddLoginService implements ContextBuilderInterface
 
     public function process(ApieContext $context): ApieContext
     {
-        $context = $context->withContext(
-            LoginService::class,
-            new LoginService(
-                $this->boundedContextHashmap,
-                $this->actionDefinitionProvider,
-                $this->serializer
+        $context = $context
+            ->withContext(
+                LoginService::class,
+                new LoginService(
+                    $this->boundedContextHashmap,
+                    $this->actionDefinitionProvider,
+                    $this->serializer
+                )
             )
-        );
+            ->withContext(
+                EntityExport::class,
+                new EntityExport(
+                    new ColumnSelector(),
+                    new ChainedExport([new CsvExport()]),
+                    $this->serializer
+                )
+            )
+            ->registerInstance(
+                new InMemoryDatalayer(
+                    new BoundedContextId('default'),
+                    new LazyLoadedListFilterer(Indexer::create())
+                )
+            );
         try {
             $filter = new Filter();
             foreach (Finder::create()->in(__DIR__ . '/../src')->files() as $file) {

@@ -42,7 +42,7 @@ class IntegrationTest extends TestCase
             // List files in the root directory
             $files = ftp_nlist($ftp, '/');
             if ($passive && $files === false) {
-                $this->assertStringContainsString("Can't open data connection", $this->process->getErrorOutput());
+                $this->assertStringContainsString("Nobody connected with the server within the timeout period", $this->process->getErrorOutput());
             } else {
                 $this->assertIsArray($files, 'ftp_nlist did not return an array: ' . $this->process->getErrorOutput() . $this->process->getOutput());
                 // Optionally, assert something about the files, e.g. not empty

@@ -6,6 +6,7 @@ use Apie\FtpServer\Commands\CdupCommand;
 use Apie\FtpServer\Commands\CwdCommand;
 use Apie\FtpServer\Commands\EprtCommand;
 use Apie\FtpServer\Commands\EpsvCommand;
+use Apie\FtpServer\Commands\FtpFeatureCommand;
 use Apie\FtpServer\Commands\ListCommand;
 use Apie\FtpServer\Commands\NlstCommand;
 use Apie\FtpServer\Commands\PassCommand;
@@ -55,6 +56,19 @@ class FtpServerRunner
 
     public function run(ApieContext $apieContext, string $command, string $arguments = ''): ApieContext
     {
+        if ($command === 'FEAT') {
+            $apieContext->getContext(ConnectionInterface::class)->write("211-Features:\r\n");
+            foreach ($this->commands as $commandName => $commandExecutable) {
+                if ($commandExecutable instanceof FtpFeatureCommand) {
+                    $helpText = implode(' ', $commandExecutable->getFeatures()->toArray());
+                    $apieContext->getContext(ConnectionInterface::class)->write("211-$commandName $helpText\r\n");
+                } else {
+                    $apieContext->getContext(ConnectionInterface::class)->write("211-$commandName\r\n");
+                }
+            }
+            $apieContext->getContext(ConnectionInterface::class)->write("211 End\r\n");
+            return $apieContext;
+        }
         if (!isset($this->commands[$command])) {
             $apieContext->getContext(ConnectionInterface::class)->write("502 Command not implemented\r\n");
             error_log("Unknown command " . $command);

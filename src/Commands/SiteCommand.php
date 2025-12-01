@@ -2,11 +2,12 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Lists\StringList;
 use Apie\FtpServer\SiteCommands\IdleCommand;
 use Apie\FtpServer\SiteCommands\SiteCommandInterface;
 use React\Socket\ConnectionInterface;
 
-class SiteCommand implements CommandInterface
+class SiteCommand implements FtpFeatureCommand
 {
     private array $siteCommands;
 
@@ -16,6 +17,11 @@ class SiteCommand implements CommandInterface
         foreach ($siteCommands as $siteCommand) {
             $this->siteCommands[strtoupper($siteCommand->getName())] = $siteCommand;
         }
+    }
+
+    public function getFeatures(): StringList
+    {
+        return new StringList(array_keys($this->siteCommands));
     }
 
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext

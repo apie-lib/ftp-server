@@ -48,7 +48,7 @@ class PasvTransfer implements TransferInterface
 
         // Timeout if no connection is made
         $timer = Loop::get()->addTimer($timeout, function () use ($deferred) {
-            $deferred->reject(new \RuntimeException("Can't open data connection"));
+            $deferred->reject(new \RuntimeException("Nobody connected with the server within the timeout period."));
         });
 
         $this->dataServer->once('connection', function (ConnectionInterface $conn) use ($deferred, $timer) {

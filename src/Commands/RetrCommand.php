@@ -26,6 +26,7 @@ class RetrCommand implements CommandInterface
             } else {
                 $conn->write("150 Opening data connection\r\n");
                 $transfer->send(Utils::toString($file->getContents()));
+                $transfer->end();
                 $conn->write("226 Transfer complete\r\n");
             }
         }

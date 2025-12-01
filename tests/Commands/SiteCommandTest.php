@@ -31,4 +31,19 @@ class SiteCommandTest extends TestCase
 214 End of SITE HELP list\r\n";
         $this->assertEquals($expectedOutput, $connection->getData());
     }
+
+    #[Test]
+    public function it_has_a_site_command(): void
+    {
+        $testItem = new SiteCommand(
+            new IdleCommand(),
+            new StoreTestCoverageCommand(),
+        );
+        $context = $this->createContext('/');
+        $connection = $context->getContext(ConnectionInterface::class);
+        assert($connection instanceof FakeConnection);
+        $testItem->run($context, 'IDLE');
+        $expectedOutput = "200 Idle for 1 usec\r\n";
+        $this->assertEquals($expectedOutput, $connection->getData());
+    }
 }
