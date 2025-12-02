@@ -46,4 +46,16 @@ class SiteCommandTest extends TestCase
         $expectedOutput = "200 Idle for 1 usec\r\n";
         $this->assertEquals($expectedOutput, $connection->getData());
     }
+
+    #[Test]
+    public function it_returns_error_code_on_unknown_site_command(): void
+    {
+        $testItem = new SiteCommand();
+        $context = $this->createContext('/');
+        $connection = $context->getContext(ConnectionInterface::class);
+        assert($connection instanceof FakeConnection);
+        $testItem->run($context, 'IDLE');
+        $expectedOutput = "502 Command not implemented\r\n";
+        $this->assertEquals($expectedOutput, $connection->getData());
+    }
 }

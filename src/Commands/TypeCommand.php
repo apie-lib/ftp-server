@@ -2,6 +2,7 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\FtpConstants;
 use React\Socket\ConnectionInterface;
 
 class TypeCommand implements CommandInterface
@@ -12,13 +13,12 @@ class TypeCommand implements CommandInterface
         $type = strtoupper(trim($arg));
         if ($type === 'A') {
             $conn->write("200 Type set to A (ASCII)\r\n");
-            return $apieContext->withContext('ftp_type', 'A');
+            return $apieContext->withContext(FtpConstants::FTP_TYPE, 'A');
         } elseif ($type === 'I') {
             $conn->write("200 Type set to I (Binary)\r\n");
-            return $apieContext->withContext('ftp_type', 'I');
-        } else {
-            $conn->write("504 Command not implemented for that parameter\r\n");
-            return $apieContext;
+            return $apieContext->withContext(FtpConstants::FTP_TYPE, 'I');
         }
+        $conn->write("504 Command not implemented for that parameter\r\n");
+        return $apieContext;
     }
 }

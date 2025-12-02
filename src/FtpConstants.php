@@ -40,4 +40,9 @@ final class FtpConstants
      * PORT command port number to connect to
      */
     public const PORT = 'ftp_port_port';
+
+    /**
+     * TYPE of file transfer (ASCII or Binary)
+     */
+    public const FTP_TYPE = 'ftp_type';
 }

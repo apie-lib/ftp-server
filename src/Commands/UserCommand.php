@@ -13,9 +13,9 @@ class UserCommand implements CommandInterface
         if ($arg) {
             $conn->write("331 Username OK, need password\r\n");
             return $apieContext
-                ->withContext(FtpConstants::USERNAME, $arg);
+                ->withContext(FtpConstants::USERNAME, trim($arg));
         } else {
-            // TODO
+            $conn->write("530 Login incorrect.\r\n");
         }
 
         return $apieContext;
