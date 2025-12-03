@@ -3,6 +3,10 @@ namespace Apie\FtpServer;
 
 use Apie\Core\ApieLib;
 use Apie\FtpServer\Enums\PortStatus;
+use Apie\FtpServer\Factories\MockServer;
+use Apie\FtpServer\Factories\ServerFactoryInterface;
+use Evenement\EventEmitterInterface;
+use React\Socket\ServerInterface;
 use React\Socket\SocketServer;
 use Throwable;
 
@@ -30,12 +34,12 @@ class PassivePortManager
     {
     }
 
-    public static function getAvailablePort(int $minPort, int $maxPort): SocketServer
+    public static function getAvailablePort(ServerFactoryInterface $serverFactory, int $minPort, int $maxPort): EventEmitterInterface
     {
         /** @vary array<int, PortStatus> $portStatuses */
         $portStatuses = [];
         $ports = range($minPort, $maxPort);
-        // shuffle($ports); // shuffly ports to avoid security issues
+        shuffle($ports); // shuffly ports to avoid security issues
         foreach ($ports as $port) {
             if (isset(self::$usedPorts[$port])) {
                 $portStatuses[$port] = PortStatus::InUse;
@@ -63,17 +67,15 @@ class PassivePortManager
                 });
                 $server->on('error', function () use ($port) {
                     self::$errorPorts[$port] = ApieLib::getPsrClock()->now()->getTimestamp() + 60;
-                });var_dump($portStatuses);
+                });
                 return $server;
             }
             try {
                 $portStatuses[$port] = PortStatus::Available;
-                var_dump($portStatuses);
-                self::$usedPorts[$port] = new SocketServer('0.0.0.0:' . $port);
+                self::$usedPorts[$port] = $serverFactory->createServer($port);
                 return self::$usedPorts[$port];
             } catch (Throwable) {
                 $portStatuses[$port] = PortStatus::Error;
-                var_dump($portStatuses);
                 self::$errorPorts[$port] = ApieLib::getPsrClock()->now()->getTimestamp() + 60;
                 continue;
             }
@@ -85,7 +87,7 @@ class PassivePortManager
         throw new \RuntimeException("No available passive ports in range $minPort-$maxPort$suffix");
     }
 
-    public static function release(SocketServer $server): void
+    public static function release(ServerInterface $server): void
     {
         $address = $server->getAddress();
         if ($address === null) {
@@ -95,5 +97,14 @@ class PassivePortManager
         $port = (int) \array_pop($parts);
         self::$releasedServers[$port] = $server;
         unset(self::$usedPorts[$port]);
+    }
+
+    public static function removeMocks(): void
+    {
+        $callback = function (ServerInterface $server): bool {
+            return !($server instanceof MockServer);
+        };
+        self::$releasedServers = array_filter(self::$releasedServers, $callback);
+        self::$usedPorts = array_filter(self::$usedPorts, $callback);
     }
 }

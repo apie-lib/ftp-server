@@ -19,6 +19,9 @@
       "Apie\\Tests\\FtpServer\\": "tests/"
     }
   },
+  "conflict": {
+    "react/promise": "<3.0"
+  },
   "require": {
     "php": ">=8.3",
     "apie/core": "self.version",

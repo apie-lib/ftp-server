@@ -1,25 +1,28 @@
 <?php
 namespace Apie\FtpServer\Transfers;
 
+use Apie\FtpServer\Factories\ServerFactoryInterface;
 use Apie\FtpServer\PassivePortManager;
 use React\EventLoop\Loop;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
 use React\Socket\ConnectionInterface;
-use React\Socket\SocketServer;
+use React\Socket\ServerInterface;
 
 class PasvTransfer implements TransferInterface
 {
-    private SocketServer $dataServer;
+    private ServerInterface $dataServer;
     private ?PromiseInterface $lastAction = null;
 
     public function __construct(
+        ServerFactoryInterface $serverFactory, 
         private readonly string $passiveMinPort = '49152',
         private readonly string $passiveMaxPort = '65534',
     ) {
         $port = null;
 
         $this->dataServer = PassivePortManager::getAvailablePort(
+            $serverFactory,
             (int) $passiveMinPort,
             (int) $passiveMaxPort
         );

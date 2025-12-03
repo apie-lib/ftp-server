@@ -14,6 +14,8 @@ use Apie\Core\Indexing\Indexer;
 use Apie\Export\CsvExport;
 use Apie\Export\EntityExport;
 use Apie\Fixtures\BoundedContextFactory;
+use Apie\FtpServer\Factories\MockFactory;
+use Apie\FtpServer\Factories\ServerFactoryInterface;
 use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\Transfers\TransferInterface;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
@@ -42,6 +44,7 @@ trait CreateFtpContext
             [
                 ConnectionInterface::class => new FakeConnection(),
                 BoundedContextHashmap::class => $hashmap,
+                ServerFactoryInterface::class => new MockFactory(),
                 EntityExport::class => $entityExport,
                 FtpConstants::CURRENT_PWD => trim($currentPath, '/'),
                 TransferInterface::class => new FakeTransfer(),
