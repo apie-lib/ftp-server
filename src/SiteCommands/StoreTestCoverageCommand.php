@@ -6,6 +6,9 @@ use React\Socket\ConnectionInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
 
+/**
+ * @codeCoverageIgnore
+ */
 class StoreTestCoverageCommand implements SiteCommandInterface
 {
     public function getName(): string
