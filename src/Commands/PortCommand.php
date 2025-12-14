@@ -2,6 +2,8 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\Factories\ServerFactoryInterface;
+use Apie\FtpServer\Factories\SimpleFtpServerFactory;
 use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\Transfers\PortTransfer;
 use Apie\FtpServer\Transfers\TransferInterface;
@@ -12,6 +14,8 @@ class PortCommand implements CommandInterface
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext
     {
         $conn = $apieContext->getContext(ConnectionInterface::class);
+        $factory = $apieContext->getContext(ServerFactoryInterface::class, false) ?? new SimpleFtpServerFactory();
+
         // Parse the argument: h1,h2,h3,h4,p1,p2
         $parts = explode(',', $arg);
         if (count($parts) !== 6) {
@@ -23,7 +27,7 @@ class PortCommand implements CommandInterface
         // Store IP and port in context for later use
         $apieContext = $apieContext->withContext(FtpConstants::IP, $ip)
             ->withContext(FtpConstants::PORT, $port)
-            ->withContext(TransferInterface::class, new PortTransfer($ip, $port));
+            ->withContext(TransferInterface::class, new PortTransfer($factory->createConnector(), $ip, $port));
         $conn->write("200 PORT command successful.\r\n");
         return $apieContext;
     }

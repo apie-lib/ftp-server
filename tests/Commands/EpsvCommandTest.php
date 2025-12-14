@@ -2,7 +2,6 @@
 namespace Apie\Tests\FtpServer\Commands;
 
 use Apie\FtpServer\Commands\EpsvCommand;
-use Apie\FtpServer\Commands\PasvCommand;
 use Apie\FtpServer\Factories\MockFactory;
 use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\PassivePortManager;

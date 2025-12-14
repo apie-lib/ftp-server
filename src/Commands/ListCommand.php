@@ -32,7 +32,7 @@ class ListCommand implements CommandInterface
             );
         }
         $transfer->end();
-        $conn->write("212 Directory send OK\r\n");
+        $conn->write("226 Directory send OK\r\n");
         return $apieContext;
     }
 }

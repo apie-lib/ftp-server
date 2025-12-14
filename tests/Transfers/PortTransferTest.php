@@ -5,13 +5,14 @@ use Apie\FtpServer\Transfers\PortTransfer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use React\EventLoop\Loop;
+use React\Socket\Connector;
 
 class PortTransferTest extends TestCase
 {
     #[Test]
     public function it_throws_error_on_connection_error()
     {
-        $testItem = new PortTransfer('256.256.256.256', 42);
+        $testItem = new PortTransfer(new Connector(), '256.256.256.256', 42);
         $testItem->send('test');
         $currentReject = null;
         $testItem->send('test2', function ($reject) use (&$currentReject) {

@@ -3,19 +3,17 @@ namespace Apie\FtpServer\Transfers;
 
 use React\Promise\PromiseInterface;
 use React\Socket\ConnectionInterface;
-use React\Socket\Connector;
+use React\Socket\ConnectorInterface;
 
 class PortTransfer implements TransferInterface
 {
-    private Connector $connector;
-
     private PromiseInterface $connectComplete;
 
     public function __construct(
+        private readonly ConnectorInterface $connector,
         private readonly string $ip,
         private readonly int $port
     ) {
-        $this->connector = new Connector();
     }
 
     public function send(string $data, ?callable $onRejected = null): void

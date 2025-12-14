@@ -1,12 +1,6 @@
 <?php
 namespace Apie\Tests\FtpServer\Commands;
 
-use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\Datalayers\ApieDatalayer;
-use Apie\Core\Datalayers\InMemory\InMemoryDatalayer;
-use Apie\Core\Datalayers\Search\LazyLoadedListFilterer;
-use Apie\Core\Indexing\Indexer;
-use Apie\FtpServer\Commands\ListCommand;
 use Apie\FtpServer\Commands\RetrCommand;
 use Apie\FtpServer\Transfers\TransferInterface;
 use Apie\Tests\FtpServer\Concerns\CreateFtpContext;

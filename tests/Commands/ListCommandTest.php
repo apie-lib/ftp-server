@@ -32,7 +32,7 @@ class ListCommandTest extends TestCase
 
     public static function provideCases(): array
     {
-        $response = "150 Here comes the directory listing\r\n212 Directory send OK\r\n";
+        $response = "150 Here comes the directory listing\r\n226 Directory send OK\r\n";
         return [
             [
                 implode(

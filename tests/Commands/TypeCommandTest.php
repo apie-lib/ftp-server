@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\FtpServer\Commands;
 
-use Apie\FtpServer\Commands\CdupCommand;
 use Apie\FtpServer\Commands\TypeCommand;
 use Apie\FtpServer\FtpConstants;
 use Apie\Tests\FtpServer\Concerns\CreateFtpContext;

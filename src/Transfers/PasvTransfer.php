@@ -15,12 +15,10 @@ class PasvTransfer implements TransferInterface
     private ?PromiseInterface $lastAction = null;
 
     public function __construct(
-        ServerFactoryInterface $serverFactory, 
+        ServerFactoryInterface $serverFactory,
         private readonly string $passiveMinPort = '49152',
         private readonly string $passiveMaxPort = '65534',
     ) {
-        $port = null;
-
         $this->dataServer = PassivePortManager::getAvailablePort(
             $serverFactory,
             (int) $passiveMinPort,
@@ -57,6 +55,9 @@ class PasvTransfer implements TransferInterface
         $this->dataServer->once('connection', function (ConnectionInterface $conn) use ($deferred, $timer) {
             Loop::get()->cancelTimer($timer);
             $deferred->resolve($conn);
+        });
+        $this->dataServer->once('close', function () use ($timer) {
+            Loop::get()->cancelTimer($timer);
         });
 
         $this->lastAction = $deferred->promise();

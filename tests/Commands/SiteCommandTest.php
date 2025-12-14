@@ -1,7 +1,6 @@
 <?php
 namespace Apie\Tests\FtpServer\Commands;
 
-use Apie\FtpServer\Commands\PwdCommand;
 use Apie\FtpServer\Commands\SiteCommand;
 use Apie\FtpServer\SiteCommands\IdleCommand;
 use Apie\FtpServer\SiteCommands\StoreTestCoverageCommand;

@@ -11,7 +11,9 @@ use Apie\FtpServer\Commands\ListCommand;
 use Apie\FtpServer\Commands\NlstCommand;
 use Apie\FtpServer\Commands\PassCommand;
 use Apie\FtpServer\Commands\PasvCommand;
+use Apie\FtpServer\Commands\PbszCommand;
 use Apie\FtpServer\Commands\PortCommand;
+use Apie\FtpServer\Commands\ProtCommand;
 use Apie\FtpServer\Commands\PwdCommand;
 use Apie\FtpServer\Commands\QuitCommand;
 use Apie\FtpServer\Commands\RetrCommand;
@@ -42,7 +44,9 @@ class FtpServerRunner
                 'NLST' => new NlstCommand(),
                 'PASS' => new PassCommand(),
                 'PASV' => new PasvCommand(),
+                'PBSZ' => new PbszCommand(),
                 'PORT' => new PortCommand(),
+                'PROT' => new ProtCommand(),
                 'PWD'  => new PwdCommand(),
                 'QUIT' => new QuitCommand(),
                 'RETR' => new RetrCommand(),

@@ -2,6 +2,8 @@
 namespace Apie\FtpServer\Commands;
 
 use Apie\Core\Context\ApieContext;
+use Apie\FtpServer\Factories\ServerFactoryInterface;
+use Apie\FtpServer\Factories\SimpleFtpServerFactory;
 use Apie\FtpServer\FtpConstants;
 use Apie\FtpServer\Transfers\PortTransfer;
 use Apie\FtpServer\Transfers\TransferInterface;
@@ -12,6 +14,7 @@ class EprtCommand implements CommandInterface
     public function run(ApieContext $apieContext, string $arg = ''): ApieContext
     {
         $conn = $apieContext->getContext(ConnectionInterface::class);
+        $factory = $apieContext->getContext(ServerFactoryInterface::class, false) ?? new SimpleFtpServerFactory();
 
         // EPRT format: |af|host|port|
         // The delimiter is the first character.
@@ -51,7 +54,7 @@ class EprtCommand implements CommandInterface
         $apieContext = $apieContext
             ->withContext(FtpConstants::IP, $host)
             ->withContext(FtpConstants::PORT, $port)
-            ->withContext(TransferInterface::class, new PortTransfer($host, $port));
+            ->withContext(TransferInterface::class, new PortTransfer($factory->createConnector(), $host, $port));
 
         $conn->write("200 EPRT command successful.\r\n");
 

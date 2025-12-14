@@ -6,11 +6,12 @@ namespace Apie\FtpServer;
 use Apie\ApieFileSystem\ApieFilesystem;
 use Apie\ApieFileSystem\ApieFilesystemFactory;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
+use Apie\FtpServer\Factories\ServerFactoryInterface;
+use Apie\FtpServer\Factories\SimpleFtpServerFactory;
 use Apie\FtpServer\Transfers\NoTransferSet;
 use Apie\FtpServer\Transfers\TransferInterface;
 use React\EventLoop\Loop;
 use React\Socket\ConnectionInterface;
-use React\Socket\SocketServer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,6 +24,7 @@ class FtpServerCommand extends Command
         private readonly FtpServerRunner $runner,
         private readonly ApieFilesystemFactory $filesystemFactory,
         private readonly ContextBuilderFactory $contextBuilder,
+        private readonly ServerFactoryInterface $serverFactory = new SimpleFtpServerFactory(),
         private readonly string $defaultIpAddress = '127.0.0.1',
         private readonly string $passiveMinPort = '49152',
         private readonly string $passiveMaxPort = '65534',
@@ -54,7 +56,7 @@ class FtpServerCommand extends Command
 
         $loop = Loop::get();
 
-        $server = new SocketServer("0.0.0.0:$port", [], $loop);
+        $server = $this->serverFactory->createServer($port);
         $server->on('connection', function (ConnectionInterface $conn) use ($input, $output) {
             $this->handleConnection($conn, $input, $output);
         });
