@@ -35,7 +35,15 @@ class EpsvCommand implements CommandInterface
         $address = $transfer->getAddress();
         $port = parse_url($address, PHP_URL_PORT);
 
-        $conn->write("229 Entering Extended Passive Mode (|||$port|)\r\n");
+        $transfer->connectOnly()->then(
+            function() use ($conn, $port) {
+                $conn->write("229 Entering Extended Passive Mode (|||$port|)\r\n");
+            },
+            function (\Throwable $error) use ($conn) {
+                error_log($error->getMessage());
+                $conn->write("425 Can't open data connection.\r\n");
+            }
+        );
 
         return $apieContext->withContext(TransferInterface::class, $transfer);
     }

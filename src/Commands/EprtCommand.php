@@ -50,14 +50,20 @@ class EprtCommand implements CommandInterface
             return $apieContext;
         }
 
-        // Store for use by the server
-        $apieContext = $apieContext
+        $transfer = new PortTransfer($factory->createConnector(), $host, $port);
+        $transfer->connectOnly()->then(
+            function() use ($conn) {
+                $conn->write("200 EPRT command successful.\r\n");
+            },
+            function (\Throwable $error) use ($conn) {
+                error_log($error->getMessage());
+                $conn->write("425 Can't open data connection.\r\n");
+            }
+        );
+
+        return $apieContext
             ->withContext(FtpConstants::IP, $host)
             ->withContext(FtpConstants::PORT, $port)
-            ->withContext(TransferInterface::class, new PortTransfer($factory->createConnector(), $host, $port));
-
-        $conn->write("200 EPRT command successful.\r\n");
-
-        return $apieContext;
+            ->withContext(TransferInterface::class, $transfer);
     }
 }

@@ -39,8 +39,15 @@ class PasvCommand implements CommandInterface
         );
         $p1 = intdiv($port, 256);
         $p2 = $port % 256;
-
-        $conn->write("227 Entering Passive Mode ($ip,$p1,$p2)\r\n");
+        $transfer->connectOnly()->then(
+            function() use ($conn, $ip, $p1, $p2) {
+                $conn->write("227 Entering Passive Mode ($ip,$p1,$p2)\r\n");
+            },
+            function (\Throwable $error) use ($conn) {
+                error_log($error->getMessage());
+                $conn->write("425 Can't open data connection.\r\n");
+            }
+        );
 
         return $apieContext->withContext(TransferInterface::class, $transfer);
     }

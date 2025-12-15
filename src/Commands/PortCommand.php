@@ -24,11 +24,20 @@ class PortCommand implements CommandInterface
         }
         $ip = implode('.', array_slice($parts, 0, 4));
         $port = ((int)$parts[4] << 8) + (int)$parts[5];
-        // Store IP and port in context for later use
-        $apieContext = $apieContext->withContext(FtpConstants::IP, $ip)
+
+        $transfer = new PortTransfer($factory->createConnector(), $ip, $port);
+        $transfer->connectOnly()->then(
+            function() use ($conn) {
+                $conn->write("200 PORT command successful.\r\n");
+            },
+            function (\Throwable $error) use ($conn) {
+                error_log($error->getMessage());
+                $conn->write("425 Can't open data connection.\r\n");
+            }
+        );
+
+        return $apieContext->withContext(FtpConstants::IP, $ip)
             ->withContext(FtpConstants::PORT, $port)
-            ->withContext(TransferInterface::class, new PortTransfer($factory->createConnector(), $ip, $port));
-        $conn->write("200 PORT command successful.\r\n");
-        return $apieContext;
+            ->withContext(TransferInterface::class, $transfer);
     }
 }

@@ -16,12 +16,18 @@ class PortTransfer implements TransferInterface
     ) {
     }
 
-    public function send(string $data, ?callable $onRejected = null): void
+    public function connectOnly(): PromiseInterface
     {
         if (!isset($this->connectComplete)) {
             $this->connectComplete = $this->connector->connect($this->ip . ':' . $this->port);
         }
-        $this->connectComplete->then(
+        return $this->connectComplete;
+    }
+
+    public function send(string $data, ?callable $onRejected = null): void
+    {
+        
+        $this->connectOnly()->then(
             function (ConnectionInterface $connection) use ($data) {
                 $connection->write($data);
             },
@@ -31,10 +37,7 @@ class PortTransfer implements TransferInterface
 
     public function end(): void
     {
-        if (!isset($this->connectComplete)) {
-            $this->connectComplete = $this->connector->connect($this->ip . ':' . $this->port);
-        }
-        $this->connectComplete->then(
+        $this->connectOnly()->then(
             function (ConnectionInterface $connection) {
                 $connection->end();
                 unset($this->connectComplete);
