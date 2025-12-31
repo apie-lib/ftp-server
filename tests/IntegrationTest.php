@@ -4,14 +4,14 @@ namespace Apie\Tests\FtpServer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\PhpProcess;
+use Symfony\Component\Process\PhpSubprocess;
 
 class IntegrationTest extends TestCase
 {
-    private PhpProcess $process;
+    private PhpSubprocess $process;
     protected function setUp(): void
     {
-        $this->process = new PhpProcess(file_get_contents(__DIR__ . '/run-server.php'), __DIR__);
+        $this->process = new PhpSubprocess([file_get_contents(__DIR__ . '/run-server.php')], __DIR__);
         $this->process->start();
         // Wait a moment for the server to start
         sleep(1);

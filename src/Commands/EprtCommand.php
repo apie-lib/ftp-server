@@ -52,7 +52,7 @@ class EprtCommand implements CommandInterface
 
         $transfer = new PortTransfer($factory->createConnector(), $host, $port);
         $transfer->connectOnly()->then(
-            function() use ($conn) {
+            function () use ($conn) {
                 $conn->write("200 EPRT command successful.\r\n");
             },
             function (\Throwable $error) use ($conn) {

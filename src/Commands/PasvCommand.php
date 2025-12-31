@@ -40,7 +40,7 @@ class PasvCommand implements CommandInterface
         $p1 = intdiv($port, 256);
         $p2 = $port % 256;
         $transfer->connectOnly()->then(
-            function() use ($conn, $ip, $p1, $p2) {
+            function () use ($conn, $ip, $p1, $p2) {
                 $conn->write("227 Entering Passive Mode ($ip,$p1,$p2)\r\n");
             },
             function (\Throwable $error) use ($conn) {

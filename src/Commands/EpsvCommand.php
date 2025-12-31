@@ -36,7 +36,7 @@ class EpsvCommand implements CommandInterface
         $port = parse_url($address, PHP_URL_PORT);
 
         $transfer->connectOnly()->then(
-            function() use ($conn, $port) {
+            function () use ($conn, $port) {
                 $conn->write("229 Entering Extended Passive Mode (|||$port|)\r\n");
             },
             function (\Throwable $error) use ($conn) {

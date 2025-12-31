@@ -27,7 +27,7 @@ class PortCommand implements CommandInterface
 
         $transfer = new PortTransfer($factory->createConnector(), $ip, $port);
         $transfer->connectOnly()->then(
-            function() use ($conn) {
+            function () use ($conn) {
                 $conn->write("200 PORT command successful.\r\n");
             },
             function (\Throwable $error) use ($conn) {
