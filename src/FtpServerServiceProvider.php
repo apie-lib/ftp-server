@@ -14,7 +14,7 @@ class FtpServerServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\FtpServer\FtpServerCommand::class,
             function ($app) {
                 return new \Apie\FtpServer\FtpServerCommand(
@@ -38,7 +38,7 @@ class FtpServerServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\FtpServer\FtpServerCommand::class], 'console.command');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\FtpServer\FtpServerRunner::class,
             function ($app) {
                 return \Apie\FtpServer\FtpServerRunner::create(
