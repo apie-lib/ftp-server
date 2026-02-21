@@ -4,11 +4,17 @@ services:
       - '@Apie\FtpServer\FtpServerRunner'
       - '@Apie\ApieFileSystem\ApieFilesystemFactory'
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
+      - '@Apie\FtpServer\Factories\ServerFactoryInterface'
       - '%apie.ftp_server.public_ip%'
       - '%apie.ftp_server.passive_min_port%'
       - '%apie.ftp_server.passive_max_port%'
     tags:
       - { name: 'console.command' }
+
+  Apie\FtpServer\Factories\ServerFactoryInterface:
+    alias: Apie\FtpServer\Factories\SimpleFtpServerFactory
+
+  Apie\FtpServer\Factories\SimpleFtpServerFactory:
 
   Apie\FtpServer\FtpServerRunner:
     factory:

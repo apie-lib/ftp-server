@@ -21,9 +21,10 @@ class FtpServerServiceProvider extends ServiceProvider
                     $app->make(\Apie\FtpServer\FtpServerRunner::class),
                     $app->make(\Apie\ApieFileSystem\ApieFilesystemFactory::class),
                     $app->make(\Apie\Core\ContextBuilders\ContextBuilderFactory::class),
-                    $this->parseArgument('%apie.ftp_server.public_ip%', \Apie\FtpServer\FtpServerCommand::class, 3),
-                    $this->parseArgument('%apie.ftp_server.passive_min_port%', \Apie\FtpServer\FtpServerCommand::class, 4),
-                    $this->parseArgument('%apie.ftp_server.passive_max_port%', \Apie\FtpServer\FtpServerCommand::class, 5)
+                    $app->make(\Apie\FtpServer\Factories\ServerFactoryInterface::class),
+                    $this->parseArgument('%apie.ftp_server.public_ip%', \Apie\FtpServer\FtpServerCommand::class, 4),
+                    $this->parseArgument('%apie.ftp_server.passive_min_port%', \Apie\FtpServer\FtpServerCommand::class, 5),
+                    $this->parseArgument('%apie.ftp_server.passive_max_port%', \Apie\FtpServer\FtpServerCommand::class, 6)
                 );
             }
         );
@@ -38,6 +39,16 @@ class FtpServerServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\FtpServer\FtpServerCommand::class], 'console.command');
+        $this->app->bind(\Apie\FtpServer\Factories\ServerFactoryInterface::class, \Apie\FtpServer\Factories\SimpleFtpServerFactory::class);
+        
+        $this->registerSingleton(
+            \Apie\FtpServer\Factories\SimpleFtpServerFactory::class,
+            function ($app) {
+                return new \Apie\FtpServer\Factories\SimpleFtpServerFactory(
+                
+                );
+            }
+        );
         $this->registerSingleton(
             \Apie\FtpServer\FtpServerRunner::class,
             function ($app) {
