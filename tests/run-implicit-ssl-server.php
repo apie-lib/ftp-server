@@ -27,6 +27,7 @@ use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\NoCodeCoverageDriverAvailableException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Finder\Finder;
 
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
@@ -94,7 +95,7 @@ class AddLoginService implements ContextBuilderInterface
 }
 
 $hashmap = BoundedContextFactory::createHashmapWithMultipleContexts();
-$actionDefinitionProvider = new ActionDefinitionProvider();
+$actionDefinitionProvider = new ActionDefinitionProvider(new ServiceLocator([]));
 $contextBuilderFactory = new ContextBuilderFactory(
     new AddLoginService(
         $hashmap,

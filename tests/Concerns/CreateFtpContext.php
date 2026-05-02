@@ -23,6 +23,7 @@ use Apie\Serializer\Serializer;
 use Apie\Tests\FtpServer\FakeConnection;
 use Apie\Tests\FtpServer\FakeTransfer;
 use React\Socket\ConnectionInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 trait CreateFtpContext
 {
@@ -32,7 +33,7 @@ trait CreateFtpContext
         
         $serializer = Serializer::create();
 
-        $actionDefinitionProvider = new ActionDefinitionProvider();
+        $actionDefinitionProvider = new ActionDefinitionProvider(new ServiceLocator([]));
 
         $entityExport = new EntityExport(
             new ColumnSelector(),
